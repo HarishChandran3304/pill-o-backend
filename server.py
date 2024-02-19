@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from db import get_prescription, get_medicine, update_encoding, verify_encoding, get_user_prescriptions
+from fastapi import FastAPI, HTTPException
+from db import get_prescription, get_medicine, update_encoding, verify_encoding, get_user_prescriptions, get_medicines
 
 app = FastAPI()
 
@@ -14,12 +14,20 @@ def medicine(id: int):
 
 @app.get("/encoding")
 def generate_random_encoding(prescription_id: int):
+    if get_prescription(prescription_id)["fullfilled"]:
+       return HTTPException(status_code=404, detail="Prescription already fullfilled")
     return update_encoding(prescription_id)
 
 @app.get("/verify")
-def verify(prescription_id: int, encoding: str):
+def verify(encoding_string: str):
+    prescription_id, encoding = encoding_string.split("|")
+
     return verify_encoding(prescription_id, encoding)
 
 @app.get("/users/{id}/prescriptions")
 def user_prescriptions(id: int):
-    return {"prescriptions": get_user_prescriptions(id)}
+    return get_user_prescriptions(id)
+
+@app.get("/medicines")
+def medicines():
+    return get_medicines()

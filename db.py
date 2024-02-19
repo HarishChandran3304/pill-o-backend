@@ -30,8 +30,14 @@ def update_encoding(prescription_id: int):
     return {"encoding": encoding}
 
 def verify_encoding(prescription_id: int, encoding: str):
-    return prescriptions.find_one({"prescriptionID": prescription_id}, {"_id": 0})["encoding"] == encoding
+    '''
+    Compares the encoding with the one in the database and checks for a 30s time difference
+    '''
+    prescriptions.update_one({"prescriptionID": prescription_id}, {"$set": {"fullfilled": True, "encoding": "success"}})
+    return {"verified": prescriptions.find_one({"prescriptionID": int(prescription_id)}, {"_id": 0})["encoding"] == encoding and (datetime.now() - prescriptions.find_one({"prescriptionID": int(prescription_id)}, {"_id": 0})["time"]).seconds < 30}
 
 def get_user_prescriptions(id: int):
-    x = [get_prescription(prescription_id) for prescription_id in users.find_one({"userID": id}, {"_id": 0})["prescriptions"]]
-    return x
+    return {"prescriptions": [get_prescription(prescription_id) for prescription_id in users.find_one({"userID": id}, {"_id": 0})["prescriptions"]]}
+
+def get_medicines():
+    return {"medicines": [medicine for medicine in medicines.find({}, {"_id": 0})]}
