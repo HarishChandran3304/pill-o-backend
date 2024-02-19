@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from db import get_prescription, get_medicine, update_encoding, verify_encoding, get_user_prescriptions, get_medicines
+from db import get_prescription, get_medicine, update_encoding, verify_encoding, get_user_prescriptions, get_medicines, polling
 
 app = FastAPI()
 
@@ -21,7 +21,6 @@ def generate_random_encoding(prescription_id: int):
 @app.get("/verify")
 def verify(encoding_string: str):
     prescription_id, encoding = encoding_string.split("|")
-
     return verify_encoding(prescription_id, encoding)
 
 @app.get("/users/{id}/prescriptions")
@@ -31,3 +30,7 @@ def user_prescriptions(id: int):
 @app.get("/medicines")
 def medicines():
     return get_medicines()
+
+@app.get("/prescription/{id}/poll")
+def poll(id: int):
+    return polling(id)
