@@ -26,3 +26,6 @@ def update_encoding(prescription_id: int):
 
 def verify_encoding(prescription_id: int, encoding: str):
     return prescriptions.find_one({"prescriptionID": prescription_id}, {"_id": 0})["encoding"] == encoding
+
+def get_user_prescriptions(id: int):
+    return [prescriptions.find_one({"prescriptionID": prescription}, {"_id": 0}) for prescription in users.find_one({"userID": id}, {"_id": 0})["prescriptions"]]

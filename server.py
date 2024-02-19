@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from db import get_prescription, get_medicine, update_encoding, verify_encoding
+from db import get_prescription, get_medicine, update_encoding, verify_encoding, get_user_prescriptions
 
 app = FastAPI()
 
@@ -19,3 +19,7 @@ def generate_random_encoding(prescription_id: int):
 @app.get("/verify")
 def verify(prescription_id: int, encoding: str):
     return verify_encoding(prescription_id, encoding)
+
+@app.get("/users/{id}/prescriptions")
+def user_prescriptions(id: int):
+    return {"prescriptions": get_user_prescriptions(id)}
