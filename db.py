@@ -10,6 +10,7 @@ client = MongoClient(os.getenv("MONGO_URI"), server_api=ServerApi('1'))
 db = client["pill-pal"]
 prescriptions = db["prescriptions"]
 medicines = db["medicines"]
+users = db["users"]
 
 
 def get_prescription(id: int):
@@ -22,3 +23,6 @@ def update_encoding(prescription_id: int):
     encoding = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=25))
     prescriptions.update_one({"prescriptionID": prescription_id}, {"$set": {"encoding": encoding}})
     return {"encoding": encoding}
+
+def verify_encoding(prescription_id: int, encoding: str):
+    return prescriptions.find_one({"prescriptionID": prescription_id}, {"_id": 0})["encoding"] == encoding
