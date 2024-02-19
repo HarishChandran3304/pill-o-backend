@@ -1,6 +1,7 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
+import random
 import os
 
 
@@ -16,3 +17,8 @@ def get_prescription(id: int):
 
 def get_medicine(id: int):
     return medicines.find_one({"medID": id}, {"_id": 0})
+
+def update_encoding(prescription_id: int):
+    encoding = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=25))
+    prescriptions.update_one({"prescriptionID": prescription_id}, {"$set": {"encoding": encoding}})
+    return {"encoding": encoding}
