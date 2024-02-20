@@ -18,7 +18,7 @@ class vaccines(BaseModel):
     age: str
     vaccines: list
 
-class user(BaseModel):
+class User(BaseModel):
     userID: int
     userName: str
     age: int
@@ -26,14 +26,19 @@ class user(BaseModel):
     bloodGrp: str
     gender: str
 
-class medicine(BaseModel):
+class Medicine(BaseModel):
     medID: int
     medName: str
     desc: str
     sideEffects: str
     imgNo: int
 
-class alert(BaseModel):
+class Alert(BaseModel):
     title: str
     desc: str
 
+class Doctor(BaseModel):
+    docID: int
+    name: str
+    age: int
+    speciality: str

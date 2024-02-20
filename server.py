@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from db import get_prescription, get_medicine, update_encoding, verify_encoding, get_user_prescriptions, get_medicines, polling, get_users, create_prescription, get_alerts, get_vaccines
-from models import enteredPrescription, generatedPrescription
+from db import get_prescription, get_medicine, update_encoding, verify_encoding, get_user_prescriptions, get_medicines, polling, get_users, create_prescription, get_alerts, get_vaccines, create_doctor
+from models import enteredPrescription, generatedPrescription, Doctor
 
 app = FastAPI()
 
@@ -138,3 +138,17 @@ def vaccines(id: int) -> dict:
     Given a user id, returns all the vaccines for the user.
     '''
     return get_vaccines(id)
+
+@app.post("/doctors")
+def doctor(doc: Doctor) -> dict:
+    '''
+    METHOD: POST
+    ENDPOINT: /doctors
+    Request body:
+        doctorID (int)
+        doctorName (str)
+        age (int)
+    Given a doctor, creates a new doctor and returns a success message.
+    '''
+    create_doctor(dict(doc))
+    return {"message": "success"}

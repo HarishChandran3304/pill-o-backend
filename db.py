@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import random
 import os
 from datetime import datetime, timedelta
+from models import Doctor
 
 
 load_dotenv()
@@ -14,6 +15,7 @@ medicines = db["medicines"]
 users = db["users"]
 alerts = db["alerts"]
 vaccines = db["vaccines"]
+doctors = db["doctors"]
 
 
 def get_prescription(prescription_id: int) -> dict:
@@ -155,3 +157,9 @@ def get_vaccines(user_id) -> dict:
         v.append(vaccine)
     
     return {"vaccines": v}
+
+def create_doctor(doctor: Doctor):
+    '''
+    DB helper function to create a new doctor.
+    '''
+    doctors.insert_one(dict(doctor))
