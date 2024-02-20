@@ -32,14 +32,14 @@ def update_encoding(prescription_id: int):
 
 def verify_encoding(prescription_id: int, encoding: str):
     prescription = prescriptions.find_one({"prescriptionID": int(prescription_id)}, {"_id": 0})
-    # # verified = prescription["encoding"] == encoding and (datetime.now() - prescription["time"]).seconds < 30
-    # if verified:
-    #     prescriptions.update_one({"prescriptionID": int(prescription_id)}, {"$set": {"fullfilled": True, "encoding": "success"}})
-    #     return {"verified": True, "prescription": get_prescription(int(prescription_id))}
-    # else:
-    #     prescriptions.update_one({"prescriptionID": int(prescription_id)}, {"$set": {"encoding": "failure"}})
-    #     return {"verified": False}
-    return {"verified": True, "prescription": prescription}
+    verified = prescription["encoding"] == encoding and (datetime.now() - prescription["time"]).seconds < 30
+    if verified:
+        prescriptions.update_one({"prescriptionID": int(prescription_id)}, {"$set": {"fullfilled": True, "encoding": "success"}})
+        return {"verified": True, "prescription": get_prescription(int(prescription_id))}
+    else:
+        prescriptions.update_one({"prescriptionID": int(prescription_id)}, {"$set": {"encoding": "failure"}})
+        return {"verified": False}
+    # return {"verified": True, "prescription": prescription}
 
 def get_user_prescriptions(user_id: int):
     return {"prescriptions": [get_prescription(prescription_id) for prescription_id in users.find_one({"userID": user_id}, {"_id": 0})["prescriptions"]]}
@@ -72,9 +72,9 @@ def create(prescription):
 
     for medicine in prescription["medicines"]:
         medicine["medID"] = int(medicine["medID"])
-        medicine["Morning"] = int(medicine["Morning"])
-        medicine["Afternoon"] = int(medicine["Afternoon"])
-        medicine["Night"] = int(medicine["Night"])
+        # medicine["Morning"] = int(medicine["Morning"])
+        # medicine["Afternoon"] = int(medicine["Afternoon"])
+        # medicine["Night"] = int(medicine["Night"])
 
     issueDate = datetime.now()
     prescription["issueDate"] = issueDate

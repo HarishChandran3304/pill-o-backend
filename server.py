@@ -67,7 +67,5 @@ class Prescription(BaseModel):
 
 @app.post("/prescriptions")
 def create_prescription(prescription: Prescription):
-    print(prescription)
-    print(dict(prescription))
     create(dict(prescription))
     return {"message": "success"}
